@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lankan Jobs - Your Career Jumpstart</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* New, modern color palette */
+    --primary-color: #3C6EE6; /* A vibrant, professional blue */
+    --accent-color: #FF7043; /* A warm, inviting orange for highlights */
+    --dark-bg: #2C3E50; /* Deep, muted blue-grey for hero */
+    --light-bg: #F4F7F6; /* Soft off-white for main content */
+    --card-bg: #FFFFFF;
+    --text-primary: #34495E; /* Dark grey for main text (listings/forms) */
+    --text-secondary: #7F8C8D; /* Muted grey for secondary text */
+    --text-hero: #FFFFFF; /* --- CRITICAL: ENSURE HERO TEXT IS WHITE --- */
+    --border-color: #E0E0E0;
+    --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+  }
+
+  /* --- Shared Page Structure --- */
+  .page-container {
+    width: 100%;
+    min-height: 100vh;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 50px;
+    animation: fadeIn 0.8s ease-in-out;
+    position: relative;
+    background-color: var(--light-bg);
+  }
+  
+  .page-container.active {
+      display: flex;
+  }
+  
+  .homepage-container {
+    min-height: 100vh;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    background-color: var(--dark-bg);
+    overflow: hidden;
+  }
+
+  .homepage-container.active {
+      display: flex;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .back-btn {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    z-index: 10;
+  }
+
+  .back-btn:hover {
+    color: var(--accent-color);
+  }
+
+  /* --- Hero Section & Background Art --- */
+  .homepage-container::before,
+  .homepage-container::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.07;
+    z-index: 0;
+    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+  }
+
+  .homepage-container::before {
+    width: 400px;
+    height: 400px;
+    top: -150px;
+    left: -150px;
+    transform: rotate(30deg);
+  }
+
+  .homepage-container::after {
+    width: 500px;
+    height: 500px;
+    bottom: -200px;
+    right: -200px;
+    transform: rotate(-45deg);
+  }
+
+  .hero-section {
+    width: 100%;
+    padding: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    color: var(--text-hero);
+    text-align: center;
+  }
+  
+  .logo-and-text { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      margin-bottom: 2rem;
+  }
+
+  .logo-text { 
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 4rem); 
+      font-weight: 800; 
+      color: var(--text-hero);
+      letter-spacing: -1px;
+  }
+  .hero-subtitle { 
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.6rem); 
+      font-weight: 500; 
+      color: var(--text-hero);
+      margin-top: 0.8rem;
+  }
+  .hero-description { 
+      max-width: 700px; 
+      font-size: 1.05rem; 
+      line-height: 1.7; 
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 1.5rem; 
+  }
+  .homepage-buttons-container { 
+      display: flex; 
+      gap: 1.8rem;
+      margin-top: 3rem;
+  }
+  .homepage-btn { 
+      padding: 1.4rem 3rem;
+      border: none; 
+      border-radius: 50px; 
+      font-size: 1.15rem; 
+      font-weight: 600; 
+      cursor: pointer; 
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  .homepage-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  }
+  #vacancies-btn { background-color: var(--primary-color); color: var(--text-hero);}
+  #vacancies-btn:hover { background-color: #315FB2;}
+  #addjobs-btn { background-color: var(--accent-color); color: var(--text-hero);}
+  #addjobs-btn:hover { background-color: #E65100;}
+
+  /* --- Job Listings & Card Styling --- */
+  .job-listings-section {
+      width: 100%;
+      max-width: 1200px;
+      padding: 3rem 2rem;
+      background-color: var(--light-bg); 
+  }
+
+  .job-listings-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+  }
+  .job-listings-header h2 { 
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.2rem; 
+      font-weight: 700; 
+      color: var(--text-primary);
+  }
+  
+  .filter-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+  }
+
+  .filter-controls label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      color: var(--text-primary);
+  }
+
+  .filter-controls select {
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      appearance: none;
+      background: var(--card-bg) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237F8C8D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 12px center;
+      background-size: 10px;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      min-width: 150px;
+  }
+  .filter-controls select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(60, 110, 230, 0.2);
+  }
+
+  .job-list { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+  }
+
+  /* --- Job Card Redesign CSS --- */
+  .job-card { 
+    background-color: var(--card-bg); 
+    padding: 2rem; 
+    border-radius: 12px; 
+    box-shadow: var(--shadow-light); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between;
+    min-height: 280px;
+    border: 1px solid var(--border-color);
+  }
+
+  .job-card:hover {
+      transform: translateY(-7px);
+      box-shadow: var(--shadow-hover);
+  }
+  
+  .job-header-details {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 1.5rem;
+  }
+
+  .company-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      background-color: #F0F0F0;
+      border: 2px solid var(--border-color);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  
+  .job-title-info {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+  }
+  
+  .job-card h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.35rem; 
+    font-weight: 700; 
+    margin: 0; 
+    color: var(--text-primary);
+  }
+  
+  .job-card p.company-name {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0.2rem 0 0;
+    font-weight: 500;
+  }
+
+  .job-tags {
+      margin-bottom: 1.2rem;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+  }
+
+  .job-tag {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+  }
+  .job-tag svg {
+      width: 14px;
+      height: 14px;
+  }
+
+  .tag-category {
+      background-color: #E3F2FD;
+      color: #2196F3;
+  }
+  .tag-type {
+      background-color: #E8F5E9;
+      color: #4CAF50;
+  }
+
+  .job-card p.description-text {
+    color: var(--text-secondary);
+    margin-bottom: 1.8rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+
+  .job-card .view-btn { 
+      display: inline-block; 
+      background-color: var(--primary-color); 
+      color: var(--text-hero); 
+      padding: 0.8rem 1.8rem; 
+      border-radius: 50px; 
+      text-decoration: none; 
+      font-weight: 600; 
+      text-align: center; 
+      margin-top: auto; 
+      cursor: pointer; 
+      border: none;
+      transition: background-color 0.3s ease, transform 0.2s;
+      width: 100%;
+  }
+  .job-card .view-btn:hover {
+      background-color: #315FB2;
+      transform: translateY(-2px);
+  }
+  
+  /* --- Job Details & Employer Form Styling --- */
+  .employer-form, .job-details-page-content {
+    max-width: 900px;
+    background-color: var(--card-bg);
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-light);
+    width: 100%;
+    text-align: left;
+    margin: 0 auto;
+    position: relative;
+    border: 1px solid var(--border-color);
+  }
+  
+  .employer-section {
+    padding: 0 1rem;
+    width: 100%;
+    min-height: 100vh;
+  }
+  
+  .employer-form h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2rem;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+      text-align: center;
+  }
+
+  .employer-form label { 
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600; 
+      margin-top: 1.5rem; 
+      display: block; 
+      color: var(--text-primary); 
+      text-align: left;
+      margin-bottom: 0.5rem;
+  }
+
+  /* Tooltip styling */
+  .tooltip-container {
+      position: relative;
+      display: block; /* Ensures it works well with the form layout */
+      margin-bottom: 1rem;
+  }
+  .tooltip-container label {
+      display: inline-block;
+      margin-top: 0;
+  }
+  .tooltip-container .tooltiptext {
+      visibility: hidden;
+      width: 250px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%; /* Position the tooltip above the text */
+      left: 50%;
+      margin-left: -125px; /* Center the tooltip */
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.9rem;
+      white-space: normal; /* Allow text to wrap */
+  }
+
+  .tooltip-container .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+  }
+  .tooltip-container:hover .tooltiptext,
+  .tooltip-container:focus-within .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+  }
+
+  .employer-form input, .employer-form textarea, .employer-form select { 
+      width: 100%; 
+      padding: 12px; 
+      border: 1px solid var(--border-color); 
+      border-radius: 8px; 
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.95rem; 
+      color: var(--text-primary);
+      background-color: #FDFDFD;
+      margin-top: 0.5rem; /* Ensure input has spacing */
+  }
+  .employer-form input:focus, .employer-form textarea:focus, .employer-form select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(60, 110, 230, 0.2);
+  }
+
+  .employer-form input[type="submit"] { 
+      background-color: var(--accent-color); 
+      color: var(--text-hero); 
+      padding: 1rem; 
+      border: none; 
+      border-radius: 50px; 
+      margin-top: 3rem; 
+      cursor: pointer; 
+      font-weight: 600; 
+      transition: background-color 0.3s ease, transform 0.2s;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  .employer-form input[type="submit"]:hover {
+      background-color: #E65100;
+      transform: translateY(-2px);
+  }
+
+  /* Job Details Page Specific Styles */
+  .job-details-page-content h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.5rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+  }
+  .job-details-page-content p {
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+  }
+  .job-details-page-content p strong {
+      color: var(--text-primary);
+  }
+  .job-details-page-content .description-box {
+      background-color: #F8F8F8;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      margin-bottom: 2rem;
+  }
+  .job-details-page-content .description-box p {
+      line-height: 1.8;
+      margin-bottom: 0;
+  }
+  .job-details-page-content .apply-btn-details {
+      background-color: var(--accent-color);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  .job-details-page-content .apply-btn-details:hover {
+      background-color: #E65100;
+      transform: translateY(-2px);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+      .job-listings-header {
+          flex-direction: column;
+          align-items: flex-start;
+      }
+      .filter-controls {
+          width: 100%;
+          justify-content: space-between;
+      }
+      .filter-controls select {
+          width: 48%;
+          min-width: unset;
+      }
+      .homepage-buttons-container {
+          flex-direction: column;
+          gap: 1rem;
+      }
+      .homepage-btn {
+          width: 80%;
+          max-width: 300px;
+      }
+      .hero-section {
+          padding: 3rem 1rem;
+      }
+      .tooltip-container .tooltiptext {
+          width: 90%;
+          left: 5%;
+          margin-left: 0;
+          bottom: 115%;
+      }
+      .tooltip-container .tooltiptext::after {
+          left: 50%;
+      }
+  }
+
+  @media (max-width: 480px) {
+      .job-listings-header h2 {
+          font-size: 1.8rem;
+      }
+      .filter-controls {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.8rem;
+      }
+      .filter-controls select {
+          width: 100%;
+      }
+      .job-card {
+          padding: 1.5rem;
+      }
+      .company-logo {
+          width: 48px;
+          height: 48px;
+      }
+      .job-card h3 {
+          font-size: 1.2rem;
+      }
+      .employer-form, .job-details-page-content {
+          padding: 2rem;
+      }
+  }
+
+</style>
+</head>
+<body>
+
+<div id="job-details-page" class="page-container">
+    <button id="back-to-vacancies" class="back-btn">← Back to Vacancies</button>
+    <div id="job-details-container" class="job-details-page-content">
+        </div>
+</div>
+
+<div id="employer-section" class="page-container employer-section">
+    <button id="back-to-main-employer" class="back-btn">← Back</button>
+    <div class="employer-form">
+      <h1>Post a New Job</h1>
+      <form id="job-post-form">
+        <label for="companyName">Company Name</label>
+        <input type="text" id="companyName" required>
+
+        <label for="jobTitle">Job Title</label>
+        <input type="text" id="jobTitle" required>
+        
+        <label for="logoFile">Company Logo (JPG/PNG)</label>
+        <input type="file" id="logoFile" accept=".jpg, .jpeg, .png">
+
+        <label for="category">Job Category</label>
+        <select id="category" required>
+          <option value="">Select a Category</option>
+          <option value="IT & Software">IT & Software</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Finance">Finance</option>
+          <option value="Graphic Design">Graphic Design</option>
+          <option value="Human Resources">Human Resources</option>
+          <option value="Sales">Sales</option>
+          <option value="Customer Service">Customer Service</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Education">Education</option>
+        </select>
+
+        <label for="jobType">Job Type</label>
+        <select id="jobType" required>
+          <option value="">Select Job Type</option>
+          <option value="Full-Time">Full-Time</option>
+          <option value="Part-Time">Part-Time</option>
+          <option value="Contract">Contract</option>
+          <option value="Temporary">Temporary</option>
+          <option value="Internship">Internship</option>
+        </select>
+        
+        <div class="form-group tooltip-container">
+            <label for="deadline">Application Deadline</label>
+            <span class="tooltiptext">Job will be automatically removed after this date.</span>
+            <input type="date" id="deadline" required>
+        </div>
+
+        <label for="jobDescription">Job Description</label>
+        <textarea id="jobDescription" rows="10" required></textarea>
+
+        <label for="contactEmail">Contact Email</label>
+        <input type="email" id="contactEmail" required>
+
+        <label for="contactPhone">Contact Phone</label>
+        <input type="tel" id="contactPhone">
+
+        <input type="submit" value="Post Job">
+      </form>
+    </div>
+</div>
+
+<div id="homepage" class="homepage-container active"> 
+  <div class="hero-section">
+      <div class="logo-and-text">
+          <h1 class="logo-text">Lankan Jobs</h1>
+          <h2 class="hero-subtitle">Your next career move starts here.</h2>
+          <p class="hero-description">Welcome to Lankan Jobs, your premier platform for career opportunities in Sri Lanka. Whether you're seeking your next professional step or looking for the perfect candidate, we're dedicated to connecting talent with opportunity.</p>
+          <div class="homepage-buttons-container">
+              <button class="homepage-btn" id="vacancies-btn">Browse Vacancies</button>
+              <button class="homepage-btn" id="addjobs-btn">Post a Job</button>
+          </div>
+      </div>
+  </div>
+
+  <div id="job-listings-section" class="job-listings-section">
+      <div class="job-listings-header">
+          <h2>Featured Jobs</h2>
+          <div class="filter-controls">
+              <div>
+                  <label for="category-filter">Category:</label>
+                  <select id="category-filter">
+                      <option value="all">All Categories</option>
+                  </select>
+              </div>
+              <div class="sort-filter-container">
+                  <label for="sort-by">Sort by:</label>
+                  <select id="sort-by">
+                      <option value="default">Default</option>
+                      <option value="latest">Latest</option>
+                      <option value="oldest">Oldest</option>
+                  </select>
+              </div>
+          </div>
+      </div>
+      <div id="job-listings-container" class="job-list">
+        </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const homepage = document.getElementById('homepage');
+    const employerSection = document.getElementById('employer-section');
+    const jobDetailsPage = document.getElementById('job-details-page');
+
+    const vacanciesBtn = document.getElementById('vacancies-btn');
+    const addjobsBtn = document.getElementById('addjobs-btn');
+    
+    const backToMainBtnEmployer = document.getElementById('back-to-main-employer');
+    const backToVacanciesBtn = document.getElementById('back-to-vacancies');
+    
+    const jobPostForm = document.getElementById('job-post-form');
+    const logoFileInput = document.getElementById('logoFile'); 
+    const jobListingsContainer = document.getElementById('job-listings-container');
+    const categoryFilter = document.getElementById('category-filter');
+    const sortBy = document.getElementById('sort-by');
+    const jobDetailsContainer = document.getElementById('job-details-container');
+
+    const DEFAULT_LOGO = 'https://via.placeholder.com/60/E0E0E0/7F8C8D?text=Logo';
+
+    let jobs = [
+        { company: 'Creative Corp', title: 'Senior UX Designer', category: 'Graphic Design', type: 'Full-Time', description: 'We are looking for a talented UX Designer to create amazing user experiences, focusing on usability and accessibility, ensuring our products are intuitive and delightful for users. You will work closely with product managers and engineers.', email: 'hr@creativecorp.com', phone: '123-456-7890', deadline: '2025-11-25', logoUrl: 'https://via.placeholder.com/60/FF7043/FFFFFF?text=CC' },
+        { company: 'Digital Solutions', title: 'Digital Marketing Specialist', category: 'Marketing', type: 'Full-Time', description: 'Join our dynamic marketing team to manage digital campaigns, SEO, SEM, and social media presence. You\'ll be responsible for developing, implementing, and managing marketing campaigns that promote our company and its products/services.', email: 'hr@digital-solutions.com', phone: '123-456-7891', deadline: '2025-10-30', logoUrl: 'https://via.placeholder.com/60/3C6EE6/FFFFFF?text=DS' },
+        { company: 'Innovate Tech', title: 'Frontend Developer (React)', category: 'IT & Software', type: 'Contract', description: 'Build beautiful and responsive web applications with our team of skilled engineers using React, HTML, CSS, and JavaScript. We are looking for someone passionate about creating excellent user interfaces and experiences.', email: 'tech@innovate.com', phone: '123-456-7892', deadline: '2025-12-15', logoUrl: 'https://via.placeholder.com/60/28A745/FFFFFF?text=IT' },
+        { company: 'Capital Finance', title: 'Financial Analyst', category: 'Finance', type: 'Full-Time', description: 'Analyze financial data, prepare reports, and provide insights to support business decision-making. This role requires strong analytical skills and a solid understanding of financial principles.', email: 'finance@capital.com', phone: '123-456-7893', deadline: '2025-12-01', logoUrl: 'https://via.placeholder.com/60/6C757D/FFFFFF?text=CF' },
+        { company: 'Art Studio', title: 'Graphic Designer', category: 'Graphic Design', type: 'Part-Time', description: 'Create stunning visuals for web and print, working on branding, marketing materials, and digital content. You should have a keen eye for aesthetics and a strong portfolio demonstrating your design skills.', email: 'design@artstudio.com', phone: '123-456-7894', deadline: '2025-11-20', logoUrl: 'https://via.placeholder.com/60/FFC107/FFFFFF?text=AS' }
+    ];
+
+    /**
+     * Controls which single view is active (homepage, employer form, or job details).
+     * @param {HTMLElement} viewToShow The element to make active.
+     */
+    const showView = (viewToShow) => {
+        homepage.classList.remove('active');
+        employerSection.classList.remove('active');
+        jobDetailsPage.classList.remove('active');
+        viewToShow.classList.add('active');
+    };
+    
+    const showJobCardsView = () => {
+        showView(homepage);
+    }
+
+    const viewJobDetails = (job) => {
+        homepage.classList.remove('active'); 
+
+        jobDetailsContainer.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 2rem;">
+                <img src="${job.logoUrl || DEFAULT_LOGO}" alt="${job.company} logo" class="company-logo" style="width: 80px; height: 80px; border-radius: 50%;">
+                <div>
+                    <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; color: var(--text-primary); margin-bottom: 0.2rem;">${job.title}</h2>
+                    <p style="font-size: 1.1rem; color: var(--text-secondary); margin: 0;">${job.company}</p>
+                    <div style="display: flex; gap: 10px; margin-top: 0.5rem;">
+                        <span class="job-tag tag-category">${job.category}</span>
+                        <span class="job-tag tag-type">${job.type}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="margin-bottom: 1.5rem;"><strong>Application Deadline:</strong> ${new Date(job.deadline).toLocaleDateString()}</p>
+            <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.8rem;">Job Description:</p>
+            <div class="description-box">
+                <p>${job.description}</p>
+            </div>
+            <div class="contact-info" style="margin-top: 2rem; margin-bottom: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                <p><strong>Contact Email:</strong> <a href="mailto:${job.email}" style="color: var(--primary-color); text-decoration: none;">${job.email}</a></p>
+                <p><strong>Contact Phone:</strong> ${job.phone || 'Not provided'}</p>
+            </div>
+            <a href="mailto:${job.email}" class="apply-btn-details" style="display: inline-block; background-color: var(--accent-color); color: white; padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none; font-weight: 600; transition: background-color 0.3s ease, transform 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">Apply Now</a>
+        `;
+        showView(jobDetailsPage); 
+    };
+
+    const checkAndRemoveExpiredJobs = () => {
+        const now = new Date();
+        jobs = jobs.filter(job => new Date(job.deadline) >= now);
+    };
+
+    const getUniqueCategories = () => {
+        checkAndRemoveExpiredJobs();
+        const categories = new Set(jobs.map(job => job.category));
+        
+        // Save the current filter selection before updating the options
+        const currentCategory = categoryFilter.value;
+        
+        categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+        
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categoryFilter.appendChild(option);
+        });
+        
+        // Restore the previous filter selection if it still exists
+        if (categories.has(currentCategory)) {
+            categoryFilter.value = currentCategory;
+        }
+    }
+
+    const filterJobs = () => {
+        const selectedCategory = categoryFilter.value;
+        const selectedSort = sortBy.value;
+        
+        // Create a copy to avoid modifying the original jobs array
+        let filteredJobs = [...jobs];
+
+        if (selectedCategory !== 'all') {
+            // This is the core fix: actually filter the jobs
+            filteredJobs = filteredJobs.filter(job => job.category === selectedCategory);
+        }
+
+        if (selectedSort === 'latest') {
+            filteredJobs.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+        } else if (selectedSort === 'oldest') {
+            filteredJobs.sort((a, b) => new Date(b.deadline) - new Date(a.deadline));
+        }
+        
+        return filteredJobs;
+    }
+    
+    // Renders the list of jobs based on current filters and sorting
+    const renderJobs = () => {
+        getUniqueCategories();
+        const jobsToRender = filterJobs();
+        jobListingsContainer.innerHTML = '';
+        
+        showJobCardsView();
+        
+        if (jobsToRender.length === 0) {
+            jobListingsContainer.innerHTML = '<p style="text-align:center; color: var(--text-secondary); padding: 2rem; font-size: 1.1rem;">No jobs found matching your current filters. Try adjusting your selections.</p>';
+        } else {
+            jobsToRender.forEach((job) => {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card';
+                
+                // Use a different event listener approach to avoid relying on index
+                jobCard.innerHTML = `
+                    <div class="job-header-details">
+                        <img src="${job.logoUrl || DEFAULT_LOGO}" alt="${job.company} logo" class="company-logo">
+                        <div class="job-title-info">
+                            <h3>${job.title}</h3>
+                            <p class="company-name">${job.company}</p>
+                        </div>
+                    </div>
+                    <div class="job-tags">
+                        <span class="job-tag tag-category">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                            ${job.category}
+                        </span>
+                        <span class="job-tag tag-type">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                            ${job.type}
+                        </span>
+                    </div>
+                    <p class="description-text">${job.description.substring(0, 150)}...</p>
+                    <button class="view-btn">View Details</button>
+                `;
+                
+                // Attach the event listener directly to the button within this loop
+                const viewBtn = jobCard.querySelector('.view-btn');
+                viewBtn.addEventListener('click', () => {
+                    viewJobDetails(job);
+                });
+                
+                jobListingsContainer.appendChild(jobCard);
+            });
+        }
+    };
+
+    // --- Event Listeners ---
+
+    vacanciesBtn.addEventListener('click', renderJobs); 
+    addjobsBtn.addEventListener('click', () => {
+      showView(employerSection);
+    });
+    
+    backToMainBtnEmployer.addEventListener('click', showJobCardsView);
+    backToVacanciesBtn.addEventListener('click', showJobCardsView);
+    
+    categoryFilter.addEventListener('change', renderJobs);
+    sortBy.addEventListener('change', renderJobs);
+
+    jobPostForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const file = logoFileInput.files[0];
+      
+      if (file) {
+          const reader = new FileReader();
+          
+          reader.onload = function(event) {
+              const base64Logo = event.target.result;
+              submitNewJob(base64Logo);
+          };
+          
+          reader.onerror = function() {
+              alert('Error reading file. Please try again.');
+          };
+
+          reader.readAsDataURL(file);
+
+      } else {
+          submitNewJob(DEFAULT_LOGO);
+      }
+    });
+
+    const submitNewJob = (logoDataUrl) => {
+        const newJob = {
+            company: document.getElementById('companyName').value,
+            title: document.getElementById('jobTitle').value,
+            email: document.getElementById('contactEmail').value,
+            logoUrl: logoDataUrl,
+            category: document.getElementById('category').value,
+            type: document.getElementById('jobType').value,
+            deadline: document.getElementById('deadline').value,
+            description: document.getElementById('jobDescription').value,
+            phone: document.getElementById('contactPhone').value
+        };
+
+        jobs.push(newJob);
+        jobPostForm.reset();
+        alert('Job has been posted successfully!');
+        
+        renderJobs();
+    }
+
+
+    // This event listener is no longer needed because the event listener is now attached directly to each button within renderJobs
+    /*
+    jobListingsContainer.addEventListener('click', (e) => {
+      if (e.target.classList.contains('view-btn')) {
+          const jobIndex = e.target.getAttribute('data-index');
+          const job = jobs[jobIndex];
+          if (job) {
+             viewJobDetails(job);
+          }
+      }
+    });
+    */
+    
+    // Initial load call
+    renderJobs();
+    setInterval(checkAndRemoveExpiredJobs, 24 * 60 * 60 * 1000);
+  });
+</script>
+
+</body>
+</html>
